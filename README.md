@@ -1,4 +1,4 @@
 # Group11
 
-# Documentation
+## Documentation
 fullcalendar: https://fullcalendar.io/
