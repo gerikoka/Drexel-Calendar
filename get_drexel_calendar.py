@@ -11,17 +11,17 @@ def scrape_events():
 
     for row in table.findAll('tr'):
         event = {}
-        rowInfo = []
+        row_info = []
         
         for column in row.findAll('td'):
             non_strikethrough_text = ''.join([str(item) for item in column.contents if isinstance(item, str)])
-            rowInfo.append(non_strikethrough_text.strip())
+            row_info.append(non_strikethrough_text.strip())
 
-        if 'TBD' in rowInfo[1]:  # Skip rows with 'TBD' dates
+        if 'TBD' in row_info[1]:  # Skip rows with 'TBD' dates
             continue
 
-        event_date = rowInfo[1]
-        event_title = rowInfo[2]
+        event_date = row_info[1]
+        event_title = row_info[2]
 
         try: 
             event['date'] = datetime.datetime.strptime(event_date, '%A, %B %d, %Y').strftime('%Y-%m-%d')
@@ -36,4 +36,5 @@ def scrape_events():
 
 if __name__ == "__main__":
     events = scrape_events()
-    print(events)
+    print(len(events), 'events scraped')
+    print('First event:', events[0])
