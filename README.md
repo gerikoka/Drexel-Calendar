@@ -13,4 +13,3 @@ Then run the following command to start the development server:
 ```bash
 flask run
 ```
-Now you can go to http://127.0.0.1:5000 to see the site.
