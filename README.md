@@ -5,11 +5,20 @@ fullcalendar: https://fullcalendar.io/
 
 
 ## How to Run app.py
-Run the folling command to activate the virtual environment:
+Run the folling commands to create a virtual environment:
 ```bash
-source venv/bin/activate
+pip install virtualenv
+python3 -m venv env
 ```
-Then run the following command to start the development server:
+Next, activate your environment by running the following command:
+```bash
+source env/bin/activate
+```
+Then, install the necessary dependencies by running the following:
+```bash
+pip install -r requirements.txt
+```
+Lastly, run the following command to start the development server:
 ```bash
 flask run
 ```
