@@ -2,6 +2,24 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+      }
+
+      #calendar-container {
+        margin-left: auto;
+      }
+
+      #calendar {
+        width: 600px;
+        height: 600px;
+        margin: 20px;
+      }
+    </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script src='fullcalendar/dist/index.global.js'></script>
     <script>
@@ -195,7 +213,7 @@
             right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay' // user can switch between the two
           },
           initialView: 'timeGridWeek',
-          eventSources: [holidays, {{ events | tojson | safe }}] // Add the holidays array as an event source
+          events: holidays // Add the holidays array as an event source
         });
 
         calendar.render();
@@ -203,10 +221,7 @@
     </script>
   </head>
   <body>
-    {% block body %}
-
+    <div id='calendar-container'>
     <div id='calendar'></div>
-
-    {% endblock %}
   </body>
 </html>
