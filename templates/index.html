@@ -213,7 +213,7 @@
             right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay' // user can switch between the two
           },
           initialView: 'timeGridWeek',
-          events: holidays // Add the holidays array as an event source
+          eventSources: [holidays, {{ events | tojson | safe }}] // Add the holidays array as an event source
         });
 
         calendar.render();
