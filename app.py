@@ -43,5 +43,16 @@ def index():
     events = scrape_events()
     return render_template('index.html', events=events)
 
+@app.route('/index.html')
+def homepage():
+    events = scrape_events()
+    return render_template('index.html', events=events)
+
+@app.route('/tester.html')
+def tester():
+    events = scrape_events()
+    return render_template('tester.html', events=events)
+
+
 if __name__ == "__main__":
     app.run()
