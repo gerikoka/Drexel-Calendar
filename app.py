@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 
 def scrape_events():
     url = 'https://drexel.edu/provost/policies-calendars/academic-calendars/quarters/'
@@ -36,12 +37,16 @@ def scrape_events():
 
     return events
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 @app.route('/')
 def index():
     events = scrape_events()
     return render_template('index.html', events=events)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/index.html')
 def homepage():
