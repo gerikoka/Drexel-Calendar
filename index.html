@@ -8,10 +8,34 @@
         padding: 0;
         display: flex;
         height: 100vh;
+        justify-content: center;
+        align-items: center;
       }
 
       #calendar-container {
         margin-left: auto;
+
+      }
+
+      #addEventButton {
+        padding: 5px 20px;
+        border: none;
+        background-color: #E5B110;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin-right: 20px; /* Adjust margin-right for positioning */
+        margin-left: 20px;
+        border-radius: 5px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        margin-top: 40px;
+      }
+
+      #addEventButton:hover {
+        background-color: #C69A12;
       }
 
       #calendar {
@@ -19,6 +43,33 @@
         height: 600px;
         margin: 20px;
       }
+
+      #addEventModal {
+      display: none;
+    }
+
+    #eventForm {
+      padding: 10px;
+    }
+
+    .delete-event-button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      padding: 2px 4px;
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      color: black;
+      font-size: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .delete-event-button:hover {
+      transform: scale(1.1);
+    }
+
     </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script src='fullcalendar/dist/index.global.js'></script>
@@ -205,6 +256,20 @@
           );
         }
 
+        var holidayTitles = [
+          "New Year's Day",
+          "Independence Day",
+          "Martin Luther King, Jr. Day",
+          "Presidents Day",
+          "Memorial Day",
+          "Juneteenth",
+          "Labor Day",
+          "Columbus Day",
+          "Veterans Day",
+          "Thanksgiving Day",
+          "Christmas Day"
+        ];
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
           navLinks: true,
           headerToolbar: {
@@ -213,15 +278,123 @@
             right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay' // user can switch between the two
           },
           initialView: 'timeGridWeek',
-          events: holidays // Add the holidays array as an event source
+
+          eventContent: function(arg) {
+            var eventEl = document.createElement('div');
+            var isHoliday = holidayTitles.includes(arg.event.title);
+
+            // Check if the event is a holiday or a user-created event
+            if (isHoliday) {
+              // This is a holiday, just display the title
+              eventEl.appendChild(document.createTextNode(arg.event.title));
+            } else {
+              // Display the time and title for all views
+              var eventTime = arg.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              var eventTitleWithTime = document.createElement('div');
+              eventTitleWithTime.textContent = `${eventTime} - ${arg.event.title}`;
+              eventTitleWithTime.style.fontSize = '10px';
+
+              eventEl.appendChild(eventTitleWithTime);
+
+              // Add delete button for week and day views
+              if (calendar.view.type === 'timeGridWeek' || calendar.view.type === 'timeGridDay') {
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '❌';
+                deleteButton.classList.add('delete-event-button');
+
+                eventEl.appendChild(deleteButton);
+
+                deleteButton.addEventListener('click', function() {
+                  arg.event.remove(); // Remove the event from the calendar
+                  var allEvents = calendar.getEvents().map(ev => ({
+                    title: ev.title,
+                    start: ev.start.toISOString(),
+                    allDay: ev.allDay,
+                    color: ev.backgroundColor,
+                    extendedProps: ev.extendedProps // Retain extendedProps for holiday identification
+                  }));
+                  localStorage.setItem('calendarEvents', JSON.stringify(allEvents)); // Update localStorage
+                });
+              }
+            }
+            return { domNodes: [eventEl] };
+          }
         });
 
         calendar.render();
+
+        // Add Event button click event
+      document.getElementById('addEventButton').addEventListener('click', function() {
+        // Show the modal when the button is clicked
+        document.getElementById('addEventModal').style.display = 'block';
+      });
+
+      // Load events from local storage when the page loads
+      var savedEvents = localStorage.getItem('calendarEvents');
+      var parsedEvents = savedEvents ? JSON.parse(savedEvents) : [];
+      parsedEvents.forEach(event => {
+        event.start = new Date(event.start); // Parse date strings back to Date objects
+        calendar.addEvent(event);
+      });
+
+      // Save Event button click event
+      document.getElementById('saveEventButton').addEventListener('click', function() {
+        // Retrieve event information from the form
+        var eventName = document.getElementById('eventName').value;
+        var eventDate = document.getElementById('eventDate').value;
+        var eventTime = document.getElementById('eventTime').value;
+
+        // Add the new event to the calendar
+        var newEvent = {
+          title: eventName,
+          start: new Date(eventDate + 'T' + eventTime), // Convert to Date object
+          allDay: false,
+          color: '#E5B110'
+        };
+
+        calendar.addEvent(newEvent);
+
+        // Get all current events and save them to local storage
+        var allEvents = calendar.getEvents().map(event => ({
+          title: event.title,
+          start: event.start.toISOString(), // Convert to string for storage
+          allDay: event.allDay,
+          color: event.backgroundColor
+        }));
+        localStorage.setItem('calendarEvents', JSON.stringify(allEvents));
+
+        // Hide the modal after saving the event
+        document.getElementById('addEventModal').style.display = 'none';
+      });
+
+      // Cancel button click event
+      document.getElementById('cancelEventButton').addEventListener('click', function() {
+        // Hide the modal when the cancel button is clicked
+        document.getElementById('addEventModal').style.display = 'none';
+      });
       });
     </script>
   </head>
   <body>
     <div id='calendar-container'>
+      <button id='addEventButton'>Add Event</button>
+      <!-- Modal for adding events -->
+    <div id='addEventModal'>
+      <div id='eventForm'>
+        <label for='eventName'>Event Name:</label>
+        <input type='text' id='eventName' required><br>
+
+        <label for='eventDate'>Event Date:</label>
+        <input type='date' id='eventDate' required><br>
+
+        <label for='eventTime'>Event Time:</label>
+        <input type='time' id='eventTime' required><br>
+
+        <button id='saveEventButton'>Save Event</button>
+        <button id='cancelEventButton'>Cancel</button>
+      </div>
+    </div>
     <div id='calendar'></div>
+    </div>
   </body>
 </html>
