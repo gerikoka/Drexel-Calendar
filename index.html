@@ -17,6 +17,22 @@
 
       }
 
+      #accessLogIn {
+	padding: 5px 20px;
+	border: none;
+	background-color: #E5B110;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin-right: 20px; /* Adjust margin-right for positioning */
+        margin-left: 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 40px;	
+	}	
+
       #addEventButton {
         padding: 5px 20px;
         border: none;
@@ -376,6 +392,9 @@
     </script>
   </head>
   <body>
+    <div>
+        <button id="accessLogIn"><a href="LogInTemplate/LogInTemplate.html">Log In</a></button>
+    </div>
     <div id='calendar-container'>
       <button id='addEventButton'>Add Event</button>
       <!-- Modal for adding events -->
