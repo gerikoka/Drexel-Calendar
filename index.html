@@ -26,6 +26,30 @@
 
       }
 
+      #accessLogIn {
+        padding: 20px;
+        border: none;
+        background-color: #E5B110;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-size: 25px;
+        margin-left: 98%;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      #logInLink {
+	color: white
+	}
+
+      #logInContainer {
+        position: relative;
+	left: 5%
+	top: 5%
+	}
+
       #addEventButton {
         padding: 5px 20px;
         border: none;
@@ -385,6 +409,11 @@
       });
     </script>
   </head>
+  <header>
+      <div id='logInContainer'>
+          <button id='accessLogIn'><a id='logInLink' href="LogInTemplate/LogInTemplate.html">Login</a></button>
+      </div>
+  </header>
   <body>
     <div id='calendar-container'>
       <button id='addEventButton'>Add Event</button>
