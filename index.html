@@ -3,14 +3,19 @@
   <head>
     <meta charset='utf-8' />
     <nav>
-
-      <a href="./index.html">Home</a>
-      <a href="./tester.html">Lifestyle</a>
+      <div class="left-buttons">
+        <a href="./index.html">Home</a>
+        <a href="./tester.html">Lifestyle</a>
+      </div>
+      <div class="right-button">
+        <a href="LogInTemplate/LogInTemplate.html">Log In</a></button>
+      </div>
     </nav>
     <style>
       body {
         margin: 0;
         padding: 0;
+        padding-top: 80px;
         display: flex;
         height: 100vh;
         justify-content: center;
@@ -22,21 +27,7 @@
 
       }
 
-      #accessLogIn {
-	padding: 5px 20px;
-	border: none;
-	background-color: #E5B110;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 12px;
-        margin-right: 20px; /* Adjust margin-right for positioning */
-        margin-left: 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 40px;	
-	}	
+  
 
       #addEventButton {
         padding: 5px 20px;
@@ -92,23 +83,45 @@
     }
 
     nav {
+      
       background-color: lightblue;
       padding: 15px;
       text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: flex-start;
     }
 
-    nav a {
+    
+    nav .left-buttons a {
       display: inline-block;
       padding: 10px 20px;
       text-decoration: none;
-      color: white;
+      color: rgb(16, 42, 189);
       background-color: lightyellow;
       border-radius: 5px;
-      margin: 0 10px;
+      margin-right: 0 10px;
     }
 
     nav a:hover {
-      background-color: yellow;
+      background-color: rgb(250, 234, 133);
+    }
+    nav .right-button {
+      display: inline-block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: rgb(16, 42, 189);
+      background-color: lightyellow;
+      border-radius: 5px;
+      margin-left: auto; /* Pushes the button to the far right */
+    }
+    
+    nav .right-button button:hover {
+      background-color: rgb(250, 234, 133);
     }
 
     </style>
@@ -417,9 +430,7 @@
     </script>
   </head>
   <body>
-    <div>
-        <button id="accessLogIn"><a href="LogInTemplate/LogInTemplate.html">Log In</a></button>
-    </div>
+  
     <div id='calendar-container'>
       <button id='addEventButton'>Add Event</button>
       <!-- Modal for adding events -->
