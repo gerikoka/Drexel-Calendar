@@ -9,7 +9,7 @@ def scrape_events():
     url = 'https://drexel.edu/provost/policies-calendars/academic-calendars/quarters/'
     r = requests.get(url) 
     soup = BeautifulSoup(r.content, 'html5lib')
-    table = soup.find('table', class_='DUVendors').find('tbody')
+    table = soup.find('div', class_='simple-accordion__body').find('tbody')
     events = []
 
     for row in table.findAll('tr'):
