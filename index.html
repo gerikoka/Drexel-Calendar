@@ -127,6 +127,12 @@
     </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script src='fullcalendar/dist/index.global.js'></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        $(function() {
+          $("#includeHtml").load("todo.html");
+        });
+    </script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
@@ -430,6 +436,8 @@
     </script>
   </head>
   <body>
+    
+    <div id="includeHtml"></div>
   
     <div id='calendar-container'>
       <button id='addEventButton'>Add Event</button>
