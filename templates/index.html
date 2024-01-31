@@ -3,64 +3,76 @@
   <head>
     <meta charset='utf-8' />
     <nav>
-      <a href="./index.html">Home</a>
-      <a href="./tester.html">tester</a>
+      <div class="left-buttons">
+        <a href="./index.html">Home</a>
+        <a href="./tester.html">Lifestyle</a>
+      </div>
+      <div class="logo">
+        <img src="static/long_logo.png">
+      </div>
+      <div class="right-button">
+        <a href="login.html">Log In</a></button>
+      </div>
     </nav>
     <style>
       body {
         margin: 0;
         padding: 0;
+        padding-top: 80px;
         display: flex;
         height: 100vh;
         justify-content: center;
         align-items: center;
       }
 
-      #calendar-container {
-        width: 100%;
-        height: 100%;
+      #notification-container {
+        display: none;
+        position: absolute; 
+        top: 200px; 
+        right: 500px; 
+        width: auto;
+        max-width: 400px;
+        background-color: #FFC600;
+        color: #07294D;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        padding: 40px; 
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-
       }
 
-      #accessLogIn {
-        padding: 20px;
-        border: none;
-        background-color: #E5B110;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        font-size: 25px;
-        margin-left: 98%;
-        border-radius: 5px;
+
+      #continue-button {
+        background-color: #0033A0;
+        color: rgb(255, 224, 10);
+        border: 1px solid #4CAF50;
+        padding: 5px 10px;
+        border-radius: 3px;
         cursor: pointer;
-        margin-top: 20px;
       }
 
-      #logInLink {
-	color: white
-	}
+      #continue-button:hover {
+        background-color: rgb(255, 204, 0);
+        color: #0033A0;
+      }
 
-      #logInContainer {
-        position: relative;
-	left: 5%
-	top: 5%
-	}
+      #calendar-container {
+        margin-left: auto;
+      }
 
       #addEventButton {
         padding: 5px 20px;
         border: none;
-        background-color: #E5B110;
-        color: white;
+        background-color: #FFC600;
+        color: #07294D;
         text-align: center;
         text-decoration: none;
         display: inline-block;
         font-size: 12px;
-        margin-right: 20px; /* Adjust margin-right for positioning */
-        margin-left: 20px;
+        margin-right: 20px !important;;
+        margin-left: 20px !important;;
         border-radius: 5px;
         transition-duration: 0.4s;
         cursor: pointer;
@@ -72,42 +84,139 @@
       }
 
       #calendar {
-        flex: 1;
-        width: 100%;
-        max-width: 800px;
-        height: 100%;
+        width: 600px;
+        height: 600px;
+        margin: 20px;
       }
 
       #addEventModal {
-      display: none;
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #07294D;
+        color: #FFC600;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 10001;
+      }
+
+      #eventForm {
+        text-align: left;
+      }
+
+      #eventForm label {
+        display: block; /* Display labels on separate lines */
+        margin-bottom: 5px;
+      }
+
+      #eventForm input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc; /* Add a border to the input fields */
+        border-radius: 4px; /* Optional: Add rounded corners */
+        box-sizing: border-box;
+      }
+
+      #saveEventButton,
+      #cancelEventButton {
+        padding: 8px 16px;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+
+      #saveEventButton:hover,
+      #cancelEventButton:hover {
+        background-color: #FFC600;
+      }
+
+      .delete-event-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 2px 4px;
+        background-color: white;
+        border: none;
+        border-radius: 50%;
+        color: #07294D;
+        font-size: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .delete-event-button:hover {
+        transform: scale(1.1);
+      }
+
+      nav {
+        background-color: #07294D;
+        padding: 15px;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      nav .logo img {
+        display: block;
+        margin-left: 500px;
+        margin-right: auto;
+        width: 40%;
+      }
+
+      nav .left-buttons a {
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #07294D;
+        background-color: #FFC600;
+        border-radius: 5px;
+        margin-right: 0 10px;
+      }
+
+      nav a:hover {
+        background-color: #CC9E00;
     }
 
-    #eventForm {
+    nav .right-button {
+      display: inline-block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #07294D;
+      background-color: #FFC600;
+      border-radius: 5px;
+      margin-left: auto; /* Pushes the button to the far right */
+    }
+
+    nav .right-button button:hover {
+      background-color: #CC9E00;
+    }
+
+    footer {
+      background-color: #07294D;
       padding: 10px;
-    }
-
-    .delete-event-button {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 2px 4px;
-      background-color: white;
-      border: none;
-      border-radius: 50%;
-      color: black;
-      font-size: 8px;
-      cursor: pointer;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .delete-event-button:hover {
-      transform: scale(1.1);
+      color: #FFC600;
+      text-align: right;
     }
 
     </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script src='fullcalendar/dist/index.global.js'></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
+      $(function() {
+          $("#includeHtml").load("todo.html");
+        });
+    </script>
+    <script>
+
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var holidays = [];
@@ -406,15 +515,35 @@
         // Hide the modal when the cancel button is clicked
         document.getElementById('addEventModal').style.display = 'none';
       });
+
+        // Show user greeting notification after 1 second
+        setTimeout(function () {
+          const notificationContainer = document.getElementById('notification-container');
+          const continueButton = document.getElementById('continue-button');
+
+          // Set the greeting message
+          const greetingMessage = "Welcome to our Drexel-specific planner! Manage your coursework and exams with personalized student-life suggestions.";
+
+          // Display the greeting notification
+          notificationContainer.style.display = "block";
+          notificationContainer.innerHTML = `<p>${greetingMessage}</p><button id="continue-button">Continue</button>`;
+
+          // Hide the notification when the "Continue" button is clicked
+          document.addEventListener("click", function (event) {
+            if (event.target && event.target.id === "continue-button") {
+              notificationContainer.style.display = "none";
+            }
+          });
+
+        }, 1000);
       });
     </script>
   </head>
-  <header>
-      <div id='logInContainer'>
-          <button id='accessLogIn'><a id='logInLink' href="LogInTemplate/LogInTemplate.html">Login</a></button>
-      </div>
-  </header>
   <body>
+    
+    <div id="includeHtml"></div>
+    <div id='notification-container'></div>
+
     <div id='calendar-container'>
       <button id='addEventButton'>Add Event</button>
       <!-- Modal for adding events -->
@@ -435,5 +564,14 @@
     </div>
     <div id='calendar'></div>
     </div>
+
+    {% if current_user.is_authenticated %}
+        <p>Welcome, {{ current_user.username }}!</p>
+    {% endif %}
+
   </body>
+  <footer>
+    <a href="https://drexel.edu/">Go to Drexel's homepage</a>
+    <a href="https://drexel.edu/counselingandhealth/counseling-center/overview/">Access mental health resources</a>
+  </footer>
 </html>

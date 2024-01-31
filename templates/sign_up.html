@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <form method="POST" action="{{ url_for('signup') }}" class="form" id="createAccount">
+            <h1 class="form_title">Create Account</h1>
+
+            <!-- Form input group for email -->
+            <div class="form_input_group">
+                <input type="email" id="createAccountEmail" name="email" class="form_input" autofocus placeholder="Email" required>
+                <div class="form_input_error_message"></div>
+            </div>
+
+            <!-- Form input group for username -->
+            <div class="form_input_group">
+                <input type="text" id="createAccountUsername" name="username" class="form_input" autofocus placeholder="Username" required>
+                <div class="form_input_error_message"></div>
+            </div>
+
+            <!-- Form input group for password -->
+            <div class="form_input_group">
+                <input type="password" id="createAccountPassword" name="password" class="form_input" autofocus placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                <div class="form_input_error_message"></div>
+            </div>
+
+            <!-- Form input group for password confirmation -->
+            <div class="form_input_group">
+                <input type="password" id="createAccountConfirmPassword" name="confirm_password" class="form_input" autofocus placeholder="Confirm Password" required>
+                <div class="form_input_error_message"></div>
+            </div>
+
+            <!-- Password criteria information -->
+            <div class="passwordCriteria">
+                <p>Password must contain at least:</p>
+                <ul>
+                    <li>Eight characters</li>
+                    <li>One number</li>
+                    <li>One uppercase letter</li>
+                    <li>One lowercase letter</li>
+                </ul>
+            </div>
+
+            <!-- Form submission button -->
+            <button class="form_button" type="submit">Continue</button>
+
+            <!-- Link to login page -->
+            <p class="form_text">
+                <a href="{{ url_for('login') }}" class="form_link">Already have an account? Sign in here.</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>
