@@ -3,13 +3,9 @@ from bs4 import BeautifulSoup
 import datetime
 import os
 
-from flask import Flask, redirect, url_for, render_template, send_from_directory
-from flask import request
-
+from flask import Flask, request, redirect, render_template, send_from_directory, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_login import UserMixin, login_user
-from flask_login import current_user
+from flask_login import LoginManager, UserMixin, login_user, current_user
 
 
 def scrape_events():
@@ -63,19 +59,15 @@ class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
- 
- 
+
 db.init_app(app)
- 
  
 with app.app_context():
     db.create_all()
  
- 
 @login_manager.user_loader
 def loader_user(user_id):
     return Users.query.get(user_id)
- 
  
 @app.route('/sign_up.html', methods=["GET", "POST"])
 def register():
@@ -87,21 +79,6 @@ def register():
         return redirect(url_for("login"))
     return render_template("sign_up.html")
  
-
-@app.route('/signup', methods=['POST'])
-def signup():
-    if request.method == 'POST':
-        # Process the form data here
-        user = Users(username=request.form.get("username"),
-                     password=request.form.get("password"))
-        db.session.add(user)
-        db.session.commit()
-
-        # Perform the necessary actions to handle the sign-up (e.g., store user in the database)
-
-        # Redirect to a success page or login page
-        return redirect(url_for('login'))
- 
 @app.route("/login.html", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -112,7 +89,6 @@ def login():
             login_user(user)
             return redirect(url_for("home"))
     return render_template("login.html")
- 
  
 @app.route("/logout")
 def logout():
