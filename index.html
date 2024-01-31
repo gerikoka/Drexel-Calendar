@@ -45,9 +45,9 @@
 
 
       #continue-button {
-        background-color: #0033A0;
-        color: rgb(255, 224, 10);
-        border: 1px solid #4CAF50;
+        background-color: #07294D;
+        color: #FFC600;
+        border: 1px solid #07294D;
         padding: 5px 10px;
         border-radius: 3px;
         cursor: pointer;
@@ -200,10 +200,22 @@
     }
 
     footer {
+      padding: 15px;
+      width: 100%;
+      box-sizing: border-box;
+      position: fixed;
+      bottom: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: flex-start;
       background-color: #07294D;
-      padding: 10px;
       color: #FFC600;
       text-align: right;
+    }
+
+    footer .p {
+      color: #FFC600;
+      margin-right: auto;
     }
 
     </style>
@@ -566,7 +578,7 @@
     </div>
   </body>
   <footer>
-    <a href="https://drexel.edu/">Go to Drexel's homepage</a>
-    <a href="https://drexel.edu/counselingandhealth/counseling-center/overview/">Access mental health resources</a>
+    <p><a href="https://drexel.edu/">Go to Drexel's homepage</a></p>
+    <p><a href="https://drexel.edu/counselingandhealth/counseling-center/overview/">Access mental health resources</a></p>
   </footer>
 </html>
