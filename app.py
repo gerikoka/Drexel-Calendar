@@ -1,3 +1,5 @@
+# Login functionality modified from https://www.geeksforgeeks.org/how-to-add-authentication-to-your-app-with-flask-login/
+
 import requests
 from bs4 import BeautifulSoup
 import datetime
@@ -5,7 +7,7 @@ import os
 
 from flask import Flask, request, redirect, render_template, send_from_directory, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user
 
 
 def scrape_events():
@@ -42,11 +44,11 @@ def scrape_events():
 
 app = Flask(__name__, static_folder='static')
  
-# tells flask-sqlalchemy what database to connect to
+# Tells flask-sqlalchemy what database to connect to
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
-# enter a secret key
+# Enter a secret key
 app.config["SECRET_KEY"] = "ENTER YOUR SECRET KEY"
-# initialize flask-sqlalchemy extension
+# Initialize flask-sqlalchemy extension
 db = SQLAlchemy()
  
 # LoginManager is needed for our application 
