@@ -56,11 +56,17 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+class UserEvent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    start = db.Column(db.String(10), nullable=False)  # Adjust the data type according to your needs
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
+    events = db.relationship('UserEvent', backref='user', lazy=True)
 
 db.init_app(app)
  
@@ -104,8 +110,25 @@ def favicon():
 @app.route('/')
 def home():
     events = scrape_events()
+    user_events = []
+    
     if current_user.is_authenticated:
         username = current_user.username
+        user_events = current_user.events
+
+        if request.method == 'POST':
+            print("Form data:", request.form)
+            event_title = request.form.get('eventName')
+            event_date = request.form.get('eventDate')
+
+            # Additional debug prints
+            print("Event Title:", event_title)
+            print("Event Date:", event_date)
+
+            # Additional validation and processing as needed
+            new_event = UserEvent(title=event_title, start=event_date, user_id=current_user.id)
+            db.session.add(new_event)
+            db.session.commit()
         return render_template('index.html', events=events, username=username)
     else: 
         return render_template('index.html', events=events)

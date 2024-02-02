@@ -2,6 +2,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <nav>
       <div class="left-buttons">
         <a href="./index.html">Home</a>
@@ -18,201 +19,9 @@
         {% endif %}
       </div>
     </nav>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        padding-top: 80px;
-        display: flex;
-        height: 100vh;
-        justify-content: center;
-        align-items: center;
-      }
+    <script src="{{ url_for('static', filename='fullcalendar-6.1.9/dist/index.global.js') }}"></script>
+    <script src="{{ url_for('static', filename='fullcalendar-6.1.9/dist/index.global.min.js') }}"></script>
 
-      #notification-container {
-        display: none;
-        position: absolute; 
-        top: 200px; 
-        right: 500px; 
-        width: auto;
-        max-width: 400px;
-        background-color: #FFC600;
-        color: #07294D;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        z-index: 10000;
-        padding: 40px; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-
-      #continue-button {
-        background-color: #0033A0;
-        color: rgb(255, 224, 10);
-        border: 1px solid #4CAF50;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-      }
-
-      #continue-button:hover {
-        background-color: rgb(255, 204, 0);
-        color: #0033A0;
-      }
-
-      #calendar-container {
-        margin-left: auto;
-      }
-
-      #addEventButton {
-        padding: 5px 20px;
-        border: none;
-        background-color: #FFC600;
-        color: #07294D;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 12px;
-        margin-right: 20px !important;;
-        margin-left: 20px !important;;
-        border-radius: 5px;
-        transition-duration: 0.4s;
-        cursor: pointer;
-        margin-top: 40px;
-      }
-
-      #addEventButton:hover {
-        background-color: #C69A12;
-      }
-
-      #calendar {
-        width: 600px;
-        height: 600px;
-        margin: 20px;
-      }
-
-      #addEventModal {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #07294D;
-        color: #FFC600;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        z-index: 10001;
-      }
-
-      #eventForm {
-        text-align: left;
-      }
-
-      #eventForm label {
-        display: block; /* Display labels on separate lines */
-        margin-bottom: 5px;
-      }
-
-      #eventForm input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc; /* Add a border to the input fields */
-        border-radius: 4px; /* Optional: Add rounded corners */
-        box-sizing: border-box;
-      }
-
-      #saveEventButton,
-      #cancelEventButton {
-        padding: 8px 16px;
-        margin-right: 10px;
-        cursor: pointer;
-      }
-
-      #saveEventButton:hover,
-      #cancelEventButton:hover {
-        background-color: #FFC600;
-      }
-
-      .delete-event-button {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        padding: 2px 4px;
-        background-color: white;
-        border: none;
-        border-radius: 50%;
-        color: #07294D;
-        font-size: 8px;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
-      }
-
-      .delete-event-button:hover {
-        transform: scale(1.1);
-      }
-
-      nav {
-        background-color: #07294D;
-        padding: 15px;
-        text-align: center;
-        width: 100%;
-        box-sizing: border-box;
-        position: fixed;
-        top: 0;
-        z-index: 1000;
-        display: flex;
-        justify-content: flex-start;
-      }
-
-      nav .logo img {
-        display: block;
-        margin-left: 500px;
-        margin-right: auto;
-        width: 40%;
-      }
-
-      nav .left-buttons a {
-        display: inline-block;
-        padding: 10px 20px;
-        text-decoration: none;
-        color: #07294D;
-        background-color: #FFC600;
-        border-radius: 5px;
-        margin-right: 0 10px;
-      }
-
-      nav a:hover {
-        background-color: #CC9E00;
-    }
-
-    nav .right-button {
-      display: inline-block;
-      padding: 10px 20px;
-      text-decoration: none;
-      color: #07294D;
-      background-color: #FFC600;
-      border-radius: 5px;
-      margin-left: auto; /* Pushes the button to the far right */
-    }
-
-    nav .right-button button:hover {
-      background-color: #CC9E00;
-    }
-
-    footer {
-      background-color: #07294D;
-      padding: 10px;
-      color: #FFC600;
-      text-align: right;
-    }
-
-    </style>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
-    <script src='fullcalendar/dist/index.global.js'></script>
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
       $(function() {
@@ -485,7 +294,10 @@
       });
 
       // Save Event button click event
-      document.getElementById('saveEventButton').addEventListener('click', function() {
+      document.getElementById('saveEventButton').addEventListener('click', function(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
         // Retrieve event information from the form
         var eventName = document.getElementById('eventName').value;
         var eventDate = document.getElementById('eventDate').value;
@@ -553,17 +365,19 @@
       <!-- Modal for adding events -->
     <div id='addEventModal'>
       <div id='eventForm'>
-        <label for='eventName'>Event Name:</label>
-        <input type='text' id='eventName' required><br>
+        <form method="POST" action="{{ url_for('home') }}">
+          <label for='eventName'>Event Name:</label>
+          <input type="text" id="eventName" name="eventName" required><br>
 
-        <label for='eventDate'>Event Date:</label>
-        <input type='date' id='eventDate' required><br>
+          <label for='eventDate'>Event Date:</label>
+          <input type='date' id='eventDate' name='eventDate' required><br>
 
-        <label for='eventTime'>Event Time:</label>
-        <input type='time' id='eventTime' required><br>
+          <label for='eventTime'>Event Time:</label>
+          <input type='time' id='eventTime' name='eventTime' required><br>
 
-        <button id='saveEventButton'>Save Event</button>
-        <button id='cancelEventButton'>Cancel</button>
+          <button id='saveEventButton'>Save Event</button>
+          <button id='cancelEventButton'>Cancel</button>
+        </form>
       </div>
     </div>
     <div id='calendar'></div>
