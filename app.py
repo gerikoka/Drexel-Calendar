@@ -68,9 +68,6 @@ class Users(UserMixin, db.Model):
     password = db.Column(db.String(250), nullable=False)
     events = db.relationship('UserEvent', backref='user', lazy=True)
 
-    def check_password(self, entered_password):
-        return self.password == entered_password
-
 db.init_app(app)
  
 with app.app_context():
@@ -96,9 +93,10 @@ def login():
         user = Users.query.filter_by(
             username=request.form.get("username")).first()
 
-        if user and user.check_password(password):
-            login_user(user)
-            return redirect(url_for("home"))
+        if user:
+            if user.password == request.form.get("password"):
+                login_user(user)
+                return redirect(url_for("home"))
         else:
             flash("Invalid username or password. Please try again.", "error")
 
