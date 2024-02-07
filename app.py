@@ -92,10 +92,10 @@ def login():
     if request.method == "POST":
         user = Users.query.filter_by(
             username=request.form.get("username")).first()
-        print("username:", request.form.get("username"))
-        if user.password == request.form.get("password"):
-            login_user(user)
-            return redirect(url_for("home"))
+        if user:
+            if user.password == request.form.get("password"):
+                login_user(user)
+                return redirect(url_for("home"))
     return render_template("login.html")
  
 @app.route("/logout")
