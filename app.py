@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import datetime
 import os
 
-from flask import Flask, request, redirect, render_template, send_from_directory, url_for
+from flask import Flask, request, redirect, render_template, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user
 
@@ -68,6 +68,9 @@ class Users(UserMixin, db.Model):
     password = db.Column(db.String(250), nullable=False)
     events = db.relationship('UserEvent', backref='user', lazy=True)
 
+    def check_password(self, entered_password):
+        return self.password == entered_password
+
 db.init_app(app)
  
 with app.app_context():
@@ -92,10 +95,13 @@ def login():
     if request.method == "POST":
         user = Users.query.filter_by(
             username=request.form.get("username")).first()
-        if user:
-            if user.password == request.form.get("password"):
-                login_user(user)
-                return redirect(url_for("home"))
+
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect(url_for("home"))
+        else:
+            flash("Invalid username or password. Please try again.", "error")
+
     return render_template("login.html")
  
 @app.route("/logout")
