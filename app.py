@@ -5,62 +5,62 @@ from bs4 import BeautifulSoup
 import datetime
 import os
 
-from flask import Flask, request, redirect, render_template, send_from_directory, url_for, flash
+from flask import Flask, request, redirect, render_template, send_from_directory, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user
 
-
 def scrape_events():
+    events = []
     url = 'https://drexel.edu/provost/policies-calendars/academic-calendars/quarters/'
     r = requests.get(url) 
     soup = BeautifulSoup(r.content, 'html5lib')
-    table = soup.find('div', class_='simple-accordion__body').find('tbody')
-    events = []
 
-    for row in table.findAll('tr'):
-        event = {}
-        row_info = []
-        
-        for column in row.findAll('td'):
-            non_strikethrough_text = ''.join([str(item) for item in column.contents if isinstance(item, str)])
-            row_info.append(non_strikethrough_text.strip())
+    for table in soup.find_all('div', class_='simple-accordion__body'): 
+        body = table.find('tbody')
 
-        if 'TBD' in row_info[1]:  # Skip rows with 'TBD' dates
-            continue
+        for row in body.findAll('tr'):
+            event = {}
+            row_info = []
+            
+            for column in row.findAll('td'):
+                non_strikethrough_text = ''.join([str(item) for item in column.contents if isinstance(item, str)])
+                row_info.append(non_strikethrough_text.strip())
 
-        event_date = row_info[1]
-        event_title = row_info[2]
+            if (len(row_info) == 0): # Skip empty rows
+                continue
 
-        try: 
-            event['start'] = datetime.datetime.strptime(event_date, '%A, %B %d, %Y').strftime('%Y-%m-%d')
-        except ValueError:
-            print(f"Error parsing date: {event_date}")
-            continue  # Skip rows with invalid date formats
+            if 'TBD' in row_info[1]:  # Skip rows with 'TBD' dates
+                    continue
 
-        event['title'] = event_title
-        events.append(event)
+            event_date = row_info[1]
+            event_title = row_info[2]
+
+            try: 
+                event['start'] = datetime.datetime.strptime(event_date, '%A, %B %d, %Y').strftime('%Y-%m-%d')
+            except ValueError:
+                print(f"Error parsing date: {event_date}")
+                continue  # Skip rows with invalid date formats
+
+            event['title'] = event_title
+            event['id'] = 'drexel'
+            events.append(event)
 
     return events
 
 app = Flask(__name__, static_folder='static')
  
-# Tells flask-sqlalchemy what database to connect to
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
-# Enter a secret key
 app.config["SECRET_KEY"] = "ENTER YOUR SECRET KEY"
-# Initialize flask-sqlalchemy extension
 db = SQLAlchemy()
  
-# LoginManager is needed for our application 
-# to be able to log in and out users
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 class UserEvent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    start = db.Column(db.String(10), nullable=False)  # Adjust the data type according to your needs
+    start = db.Column(db.String(10), nullable=False)
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -111,31 +111,68 @@ def logout():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-@app.route('/')
-def home():
+@app.route('/user_events', methods=['GET'])
+def get_user_events():
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        user_events = UserEvent.query.filter_by(user_id=user_id).all()
+        events = [{'id': event.id, 'title': event.title, 'start': event.start} for event in user_events]
+        return jsonify(events)
+    else:
+        return jsonify([])  # Return an empty list if the user is not authenticated
+
+@app.route('/save_event', methods=['POST'])
+def save_user_event():
+    if current_user.is_authenticated:
+        try:
+            user_id = current_user.id
+            event_data = request.get_json()
+
+            # Save the event to the database
+            new_event = UserEvent(
+                title=event_data['title'],
+                start=event_data['start'],
+                user_id=user_id
+            )
+            db.session.add(new_event)
+            db.session.commit()
+
+            # Respond with the event_id
+            return {'event_id': new_event.id}
+        except Exception as e:
+            print(f"Error saving event: {e}")
+            return jsonify({'error': 'Error saving event'}), 500
+    else:
+        return jsonify({'error': 'User not authenticated'}), 401
+
+@app.route('/delete_event/<int:event_id>', methods=['DELETE'])
+def delete_user_event(event_id):
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        event_to_delete = UserEvent.query.filter_by(id=event_id, user_id=user_id).first()
+
+        if event_to_delete:
+            db.session.delete(event_to_delete)
+            db.session.commit()
+            return jsonify({'message': 'Event deleted successfully'})
+        else:
+            return jsonify({'error': 'Event not found'}), 404
+    else:
+        return jsonify({'error': 'User not authenticated'}), 401
+
+@app.route('/drexel_events', methods=['GET'])
+def get_drexel_events():
     events = scrape_events()
-    user_events = []
-    
+    return jsonify(events)
+
+@app.route('/')
+def home():  
     if current_user.is_authenticated:
         username = current_user.username
         user_events = current_user.events
-
-        if request.method == 'POST':
-            print("Form data:", request.form)
-            event_title = request.form.get('eventName')
-            event_date = request.form.get('eventDate')
-
-            # Additional debug prints
-            print("Event Title:", event_title)
-            print("Event Date:", event_date)
-
-            # Additional validation and processing as needed
-            new_event = UserEvent(title=event_title, start=event_date, user_id=current_user.id)
-            db.session.add(new_event)
-            db.session.commit()
-        return render_template('index.html', events=events, username=username)
+        return render_template('index.html', username=username)
     else: 
-        return render_template('index.html', events=events)
+        return render_template('index.html')
 
 @app.route('/todo.html')
 def todo():
