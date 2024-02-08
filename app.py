@@ -72,12 +72,16 @@ db.init_app(app)
  
 with app.app_context():
     db.create_all()
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
  
 @login_manager.user_loader
 def loader_user(user_id):
     return Users.query.get(user_id)
  
-@app.route('/sign_up.html', methods=["GET", "POST"])
+@app.route('/signup', methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         user = Users(username=request.form.get("username"),
@@ -87,7 +91,7 @@ def register():
         return redirect(url_for("login"))
     return render_template("sign_up.html")
  
-@app.route("/login.html", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         user = Users.query.filter_by(
@@ -106,10 +110,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home"))
-
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/user_events', methods=['GET'])
 def get_user_events():
@@ -174,7 +174,7 @@ def home():
     else: 
         return render_template('index.html')
 
-@app.route('/todo.html')
+@app.route('/todo')
 def todo():
     return render_template('todo.html')
 
