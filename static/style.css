@@ -43,6 +43,8 @@ body {
 
 #calendar-container {
   margin-left: auto;
+  margin-top: 20px; /* Adjust the top margin to create space between the navbar and the calendar */
+  margin-bottom: 20px; /* Add some space between the calendar and the todo list */
 }
 
 #addEventButton {
@@ -60,6 +62,7 @@ body {
   transition-duration: 0.4s;
   cursor: pointer;
   margin-top: 40px;
+  margin-bottom: 20px; /* Add some space between the button and the calendar */
 }
 
 #addEventButton:hover {
@@ -144,14 +147,15 @@ nav {
   top: 0;
   z-index: 1000;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between; /* Add this to space out the logo and buttons */
 }
 
 nav .logo img {
   display: block;
-  margin-left: 500px;
+  /* Remove the following line to left-align the logo */
+  /* margin-left: auto; */
   margin-right: auto;
-  width: 0%;
+  width: 50%;
 }
 
 nav .left-buttons a {
@@ -161,11 +165,11 @@ nav .left-buttons a {
   color: #07294D;
   background-color: #FFC600;
   border-radius: 5px;
-  margin-right: 0 10px;
+  margin-right: 10px;
 }
 
-  nav a:hover {
-    background-color: #CC9E00;
+nav a:hover {
+  background-color: #CC9E00;
 }
 
 nav .right-button {
@@ -175,16 +179,159 @@ nav .right-button {
   color: #07294D;
   background-color: #FFC600;
   border-radius: 5px;
-  margin-left: auto; /* Pushes the button to the far right */
+  margin-left: 10px;
 }
 
 nav .right-button button:hover {
   background-color: #CC9E00;
 }
 
+
 footer {
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-start;
   background-color: #07294D;
-  padding: 10px;
   color: #FFC600;
   text-align: right;
+  margin-top: 20px; /* Add some space between the todo list and the footer */
 }
+
+footer .p {
+  color: #FFC600;
+  margin-right: auto;
+}
+
+#includeTodo {
+  /* Adjust the position of the Todo list */
+  margin-top: 20px; /* Add some space between the calendar and the todo list */
+  margin-bottom: 20px; /* Add some space between the todo list and the calendar */
+}
+
+#content-container {
+  display: flex;
+}
+
+#left-content {
+  margin-right: 20px; /* Adjust as needed */
+}
+
+#course-section {
+  position: absolute;
+  left: 36%;
+  top: 12.4%;
+  transform: translate(-50%);
+  max-height: 300px;
+  min-width: 345px;
+  overflow-y: auto;
+  order: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#course-container {
+  position: absolute;
+  left: 36%;
+  top: 24.4%;
+  transform: translateX(-50%);
+  min-height: 400px;
+  max-height: 400px;
+  min-width: 345px;
+  overflow-y: auto;
+  border: 10px solid #07294D;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 7px solid #07294D;
+    background-color: #FFC600;
+  }
+
+#addCourseButton {
+  padding: 5px 20px;
+  border: none;
+  background-color: #FFC600;
+  color: #07294D;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 20px !important;
+  margin-left: 20px !important;
+  border-radius: 5px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  margin-top: 20px; /* Adjust the margin-top value as needed */
+}
+
+#addCourseButton:hover {
+  background-color: #C69A12;
+}
+
+#addCourseModal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#courseForm {
+  background-color: #07294D;
+  color: #FFC600;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+  #courseForm label {
+    display: block; 
+    margin-bottom: 10px;
+  }
+
+  #courseForm input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    box-sizing: border-box;
+  }
+
+  #saveCourseButton,
+  #cancelCourseButton {
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  #saveCourseButton:hover,
+  #cancelCourseButton:hover {
+    background-color: #FFC600;
+  }
+
+  #course-section h2 {
+    border: 10px solid #07294D; /* Add a 2px solid yellow border */
+    background-color: #FFC600;
+    color: white; /* Set the text color to white */
+    padding: 20px 105px; /* Add some padding for better appearance */
+    }

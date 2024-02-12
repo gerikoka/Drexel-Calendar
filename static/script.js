@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
           events: function (fetchInfo, successCallback, failureCallback) {
             // Fetch drexel-specific events
-            fetch('/drexel_events')
+            fetch('/scraped_events')
               .then(response => response.json())
               .then(data => {
                 successCallback(data);
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var isHoliday = holidayTitles.includes(arg.event.title);
 
         // Check if the event is a holiday, a Drexel event, or a user-created event
-        if (isHoliday || arg.event.id == 'drexel') {
+        if (isHoliday || arg.event.id == 'scraped_event') {
           // This is a holiday or a Drexel event, just display the title
           eventEl.appendChild(document.createTextNode(arg.event.title));
         } else {
@@ -362,4 +362,38 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
     }, 1000);
+  });
+
+  // Add Course button click event
+  document.getElementById('addCourseButton').addEventListener('click', function() {
+    // Show the modal when the button is clicked
+    document.getElementById('addCourseModal').style.display = 'block';
+  });
+  // Save Course button click event
+  document.getElementById('saveCourseButton').addEventListener('click', function() {
+    // Retrieve course information from the form
+    var courseName = document.getElementById('courseName').value;
+    var startDate = document.getElementById('courseStartDate').value;
+    var endDate = document.getElementById('courseEndDate').value;
+    var meetingTimes = document.getElementById('courseMeetingTimes').value;
+
+    // Create a new course item
+    var courseItem = document.createElement('div');
+    courseItem.classList.add('course-item');
+    courseItem.innerHTML = `<strong>${courseName}</strong><br>
+                            Start Date: ${startDate}<br>
+                            End Date: ${endDate}<br>
+                            Meeting Times: ${meetingTimes}`;
+
+    // Add the new course to the container
+    document.getElementById('course-container').appendChild(courseItem);
+
+    // Hide the modal after saving the course
+    document.getElementById('addCourseModal').style.display = 'none';
+  });
+
+  // Cancel button click event for the Add Course modal
+  document.getElementById('cancelCourseButton').addEventListener('click', function() {
+    // Hide the modal when the cancel button is clicked
+    document.getElementById('addCourseModal').style.display = 'none';
   });
