@@ -14,35 +14,57 @@
       <div id='notification-container'></div>
     {% endif %}
 
-    <div id="content-container">
-      <div id="left-content">
-        <button id='addEventButton'>Add Event</button>
-        <div id='includeTodo'></div>
-        {% if current_user.is_authenticated %}
-          <p>Welcome, {{ current_user.username }}!</p>
-        {% endif %}
-      </div>
+    <div id='includeTodo'></div>
+    {% if current_user.is_authenticated %}
+      <p>Welcome, {{ current_user.username }}!</p>
+    {% endif %}
 
-      <div id='calendar-container'>
-        <!-- Modal for adding events -->
-      <div id='addEventModal'>
-        <div id='eventForm'>
-          <form method="POST" action="{{ url_for('home') }}">
-            <label for='eventName'>Event Name:</label>
-            <input type="text" id="eventName" name="eventName" required><br>
+    <div id='calendar-container'>
+      <button id='addEventButton'>Add Event</button>
+      <button id='addCourseButton'>Add Course</button>
+      
+    <!-- Modal for adding events -->
+    <div id='addEventModal'>
+      <div id='eventForm'>
+        <label for='eventName'>Event Name:</label>
+        <input type='text' id='eventName' required><br>
 
-            <label for='eventDate'>Event Date:</label>
-            <input type='date' id='eventDate' name='eventDate' required><br>
+        <label for='eventDate'>Event Date:</label>
+        <input type='date' id='eventDate' required><br>
 
-            <label for='eventTime'>Event Time:</label>
-            <input type='time' id='eventTime' name='eventTime' required><br>
+        <label for='eventTime'>Event Time:</label>
+        <input type='time' id='eventTime' required><br>
 
-            <button id='saveEventButton' type="submit">Save Event</button>
-            <button id='cancelEventButton'>Cancel</button>
-          </form>
-        </div>
+        <button id='saveEventButton'>Save Event</button>
+        <button id='cancelEventButton'>Cancel</button>
       </div>
     </div>
+
+    <!-- Modal for adding courses -->
+    <div id='addCourseModal' class='modal'>
+      <div id='courseForm' class='modal-content'>
+        <label for='courseName'>Course Name:</label>
+        <input type='text' id='courseName' required><br>
+
+        <label for='courseStartDate'>Start Date:</label>
+        <input type='date' id='courseStartDate' required><br>
+
+        <label for='courseEndDate'>End Date:</label>
+        <input type='date' id='courseEndDate' required><br>
+
+        <label for='courseMeetingTimes'>Meeting Times:</label>
+        <input type='text' id='courseMeetingTimes' required><br>
+
+        <button id='saveCourseButton'>Save Course</button>
+        <button id='cancelCourseButton'>Cancel</button>
+      </div>
+    </div>
+
+    <div id='course-section'>
+          <h2>My Courses</h2>
+      </div>
+
+    <div id='course-container'></div>
     <div id='calendar'></div>
     </div>
 
