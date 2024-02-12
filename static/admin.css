@@ -1,0 +1,54 @@
+body {
+    background: var(--color-secondary);
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 800px;  /* Adjust the width to fit your design */
+    margin: auto;
+    padding: 2rem;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    background: #222;  /* Adjust the background color */
+}
+
+.admin_title {
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.admin_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.admin_table th, .admin_table td {
+    padding: 10px;
+    border: 1px solid #444;
+    text-align: left;
+}
+
+.admin_table th {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.admin_table tr:nth-child(even) {
+    background: #333;
+}
+
+.admin_table tr:nth-child(odd) {
+    background: #444;
+}
+
+.admin_table a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.admin_table a:hover {
+    text-decoration: underline;
+}

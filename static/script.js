@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
           events: function (fetchInfo, successCallback, failureCallback) {
             // Fetch drexel-specific events
-            fetch('/drexel_events')
+            fetch('/scraped_events')
               .then(response => response.json())
               .then(data => {
                 successCallback(data);
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var isHoliday = holidayTitles.includes(arg.event.title);
 
         // Check if the event is a holiday, a Drexel event, or a user-created event
-        if (isHoliday || arg.event.id == 'drexel') {
+        if (isHoliday || arg.event.id == 'scraped_event') {
           // This is a holiday or a Drexel event, just display the title
           eventEl.appendChild(document.createTextNode(arg.event.title));
         } else {

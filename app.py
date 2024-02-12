@@ -1,57 +1,18 @@
 # Login functionality modified from https://www.geeksforgeeks.org/how-to-add-authentication-to-your-app-with-flask-login/
-
-import requests
-from bs4 import BeautifulSoup
-import datetime
 import os
-
+from scrape_events import scrape_events
+from admin import admin_bp
 from flask import Flask, request, redirect, render_template, send_from_directory, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user
-
-def scrape_events():
-    events = []
-    url = 'https://drexel.edu/provost/policies-calendars/academic-calendars/quarters/'
-    r = requests.get(url) 
-    soup = BeautifulSoup(r.content, 'html5lib')
-
-    for table in soup.find_all('div', class_='simple-accordion__body'): 
-        body = table.find('tbody')
-
-        for row in body.findAll('tr'):
-            event = {}
-            row_info = []
-            
-            for column in row.findAll('td'):
-                non_strikethrough_text = ''.join([str(item) for item in column.contents if isinstance(item, str)])
-                row_info.append(non_strikethrough_text.strip())
-
-            if (len(row_info) == 0): # Skip empty rows
-                continue
-
-            if 'TBD' in row_info[1]:  # Skip rows with 'TBD' dates
-                    continue
-
-            event_date = row_info[1]
-            event_title = row_info[2]
-
-            try: 
-                event['start'] = datetime.datetime.strptime(event_date, '%A, %B %d, %Y').strftime('%Y-%m-%d')
-            except ValueError:
-                print(f"Error parsing date: {event_date}")
-                continue  # Skip rows with invalid date formats
-
-            event['title'] = event_title
-            event['id'] = 'drexel'
-            events.append(event)
-
-    return events
+from flask_migrate import Migrate
 
 app = Flask(__name__, static_folder='static')
  
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "ENTER YOUR SECRET KEY"
 db = SQLAlchemy()
+migrate = Migrate(app, db)
  
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -67,11 +28,14 @@ class Users(UserMixin, db.Model):
     username = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
     events = db.relationship('UserEvent', backref='user', lazy=True)
+    is_admin = db.Column(db.Boolean, default=False)
 
 db.init_app(app)
  
 with app.app_context():
     db.create_all()
+
+app.register_blueprint(admin_bp, url_prefix='/admin')
 
 @app.route('/favicon.ico')
 def favicon():
@@ -89,7 +53,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for("login"))
-    return render_template("sign_up.html")
+    return render_template("signup.html")
  
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -160,8 +124,8 @@ def delete_user_event(event_id):
     else:
         return jsonify({'error': 'User not authenticated'}), 401
 
-@app.route('/drexel_events', methods=['GET'])
-def get_drexel_events():
+@app.route('/scraped_events', methods=['GET'])
+def get_scraped_events():
     events = scrape_events()
     return jsonify(events)
 
@@ -174,14 +138,17 @@ def home():
     else: 
         return render_template('index.html')
 
+@app.route('/navbar')
+def navbar():
+    return render_template('navbar.html')
+
 @app.route('/todo')
 def todo():
     return render_template('todo.html')
 
 @app.route('/tester')
 def tester():
-    events = scrape_events()
-    return render_template('tester.html', events=events)
+    return render_template('tester.html')
 
 if __name__ == "__main__":
     app.run()
