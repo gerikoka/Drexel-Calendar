@@ -130,6 +130,11 @@ input {
 .addBtn:hover {
   background-color: #bbb;
 }
+
+.draggable {
+    cursor: move;
+}
+
 </style>
 </head>
 <body>
@@ -141,13 +146,13 @@ input {
     <span onclick="newElement()" class="addBtn">Add</span>
   </div>
 
-  <ul id="myUL">
-    <li>Example #1</li>
-    <li class="checked">Example #2</li>
+  <ul id="myUL" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+    <li class="draggable">Example #1</li>
+    <li class="draggable checked">Example #2</li>
   </ul>
 </div>
 
-<script>
+<script> 
 // Create a "close" button and append it to each list item
 var myNodelist = document.getElementsByTagName("LI");
 var i;
@@ -187,6 +192,7 @@ function newElement() {
     alert("You must write something!");
   } else {
     document.getElementById("myUL").appendChild(li);
+    makeDraggable(li)
   }
   document.getElementById("myInput").value = "";
 
@@ -202,6 +208,86 @@ function newElement() {
       div.style.display = "none";
     }
   }
+}
+  
+// Make list items draggable
+var draggableItems = document.getElementsByClassName('draggable');
+for (var i = 0; i < draggableItems.length; i++) {
+  draggableItems[i].draggable = true;
+  draggableItems[i].addEventListener('dragstart', handleDragStart, false);
+  draggableItems[i].addEventListener('dragover', handleDragOver, false);
+  draggableItems[i].addEventListener('drop', handleDrop, false);
+}
+
+function handleDragStart(e) {
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', null);
+  draggedItem = this;
+  this.style.opacity = '0.4';
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  if (draggedItem !== this) {
+    var temp = this.innerHTML;
+    this.innerHTML = draggedItem.innerHTML;
+    draggedItem.innerHTML = temp;
+  }
+  this.style.opacity = '1';
+  return false;
+}
+
+var draggedItem = null;
+
+var draggableItems = document.getElementsByClassName('draggable');
+for (var i = 0; i < draggableItems.length; i++) {
+  draggableItems[i].draggable = true;
+  draggableItems[i].addEventListener('dragstart', handleDragStart, false);
+  draggableItems[i].addEventListener('dragover', handleDragOver, false);
+  draggableItems[i].addEventListener('drop', handleDrop, false);
+}
+
+function handleDragStart(e) {
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', null);
+  draggedItem = this;
+  this.style.opacity = '0.4';
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  if (draggedItem !== this) {
+    var tempText = this.innerHTML;
+    var tempChecked = this.classList.contains('checked');
+    
+    this.innerHTML = draggedItem.innerHTML;
+    this.classList.toggle('checked', draggedItem.classList.contains('checked'));
+
+    draggedItem.innerHTML = tempText;
+    draggedItem.classList.toggle('checked', tempChecked);
+  }
+  this.style.opacity = '1';
+  return false;
 }
 </script>
 
