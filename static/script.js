@@ -364,7 +364,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
   });
 
-  // Add Course button click event
+  window.onload = function() {
+    // Add Course button click event
   document.getElementById('addCourseButton').addEventListener('click', function() {
     // Show the modal when the button is clicked
     document.getElementById('addCourseModal').style.display = 'block';
@@ -397,3 +398,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hide the modal when the cancel button is clicked
     document.getElementById('addCourseModal').style.display = 'none';
   });
+  }
