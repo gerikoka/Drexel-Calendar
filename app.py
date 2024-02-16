@@ -23,11 +23,20 @@ class UserEvent(db.Model):
     title = db.Column(db.String(255), nullable=False)
     start = db.Column(db.String(10), nullable=False)
 
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    start_date = db.Column(db.String(10), nullable=False)
+    end_date = db.Column(db.String(10))
+    meeting_times = db.Column(db.String(10))
+
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
     events = db.relationship('UserEvent', backref='user', lazy=True)
+    courses = db.relationship('Course', backref='user', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
 
 db.init_app(app)
@@ -128,6 +137,57 @@ def delete_user_event(event_id):
 def get_scraped_events():
     events = scrape_events()
     return jsonify(events)
+
+@app.route('/courses', methods=['GET'])
+def get_courses():
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        user_courses = Course.query.filter_by(user_id=user_id).all()
+        courses = [{'id': course.id, 'name': course.name, 'start_date': course.start_date, 'end_date': course.end_date, 'meeting_times': course.meeting_times} for course in user_courses]
+        return jsonify(courses)
+    else:
+        return jsonify([])  # Return an empty list if the user is not authenticated
+
+@app.route('/save_course', methods=['POST'])
+def save_course():
+    if current_user.is_authenticated:
+        try:
+            user_id = current_user.id
+            course_data = request.get_json()
+
+            # Save the course to the database
+            new_course = Course(
+                name=course_data['name'],
+                start_date=course_data['start_date'],
+                end_date = course_data['end_date'],
+                meeting_times = course_data['meeting_times'],
+                user_id=user_id
+            )
+            db.session.add(new_course)
+            db.session.commit()
+
+            # Respond with the course_id
+            return {'course_id': new_course.id}
+        except Exception as e:
+            print(f"Error saving course: {e}")
+            return jsonify({'error': 'Error saving course'}), 500
+    else:
+        return jsonify({'error': 'User not authenticated'}), 401
+
+@app.route('/delete_course/<int:course_id>', methods=['DELETE'])
+def delete_course(course_id):
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        course_to_delete = Course.query.filter_by(id=course_id, user_id=user_id).first()
+
+        if course_to_delete:
+            db.session.delete(course_to_delete)
+            db.session.commit()
+            return jsonify({'message': 'Course deleted successfully'})
+        else:
+            return jsonify({'error': 'Course not found'}), 404
+    else:
+        return jsonify({'error': 'User not authenticated'}), 401
 
 @app.route('/')
 def home():  

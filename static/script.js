@@ -222,14 +222,14 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
           events: function (fetchInfo, successCallback, failureCallback) {
-            // Fetch drexel-specific events
+            // Fetch Drexel-specific events
             fetch('/scraped_events')
               .then(response => response.json())
               .then(data => {
                 successCallback(data);
               })
               .catch(error => {
-                console.error('Error fetching user events:', error);
+                console.error('Error fetching scraped events:', error);
                 failureCallback(error);
               });
           },
@@ -362,40 +362,88 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
     }, 1000);
-  });
 
-  window.onload = function() {
     // Add Course button click event
-  document.getElementById('addCourseButton').addEventListener('click', function() {
-    // Show the modal when the button is clicked
-    document.getElementById('addCourseModal').style.display = 'block';
+    document.getElementById('addCourseButton').addEventListener('click', function() {
+      // Show the modal when the button is clicked
+      document.getElementById('addCourseModal').style.display = 'block';
+    });
+    // Save Course button click event
+    document.getElementById('saveCourseButton').addEventListener('click', function() {
+      // Retrieve course information from the form
+      var courseName = document.getElementById('courseName').value;
+      var startDate = document.getElementById('courseStartDate').value;
+      var endDate = document.getElementById('courseEndDate').value;
+      var meetingTimes = document.getElementById('courseMeetingTimes').value;
+
+      // Create a new course item
+      var courseItem = document.createElement('div');
+      courseItem.classList.add('course-item');
+      courseItem.innerHTML = `<strong>${courseName}</strong><br>
+                              Start Date: ${startDate}<br>
+                              End Date: ${endDate}<br>
+                              Meeting Times: ${meetingTimes}`;
+
+      // Add the new course to the container
+      document.getElementById('course-container').appendChild(courseItem);
+
+      // Save the new course to the server
+      fetch('/save_course', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'name': courseName,
+          'start_date': startDate,
+          'end_date': endDate,
+          'meeting_times': meetingTimes
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Course saved successfully:', data);
+        })
+        .catch(error => {
+          console.error('Error saving course:', error);
+        });
+
+        // Hide the modal after saving the course
+        document.getElementById('addCourseModal').style.display = 'none';
+      });
+
+    // Cancel button click event for the Add Course modal
+    document.getElementById('cancelCourseButton').addEventListener('click', function() {
+      // Hide the modal when the cancel button is clicked
+      document.getElementById('addCourseModal').style.display = 'none';
+    });
+
+   // Fetch courses
+    fetch('/courses')
+      .then(response => response.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          // Iterate over courses
+          for (var course of data) {
+            // Create a new course item
+            var courseItem = document.createElement('div');
+            courseItem.classList.add('course-item');
+            courseItem.innerHTML = `<strong>${course.name}</strong><br>
+                                    Start Date: ${course.start_date}<br>
+                                    End Date: ${course.end_date}<br>
+                                    Meeting Times: ${course.meeting_times}`;
+
+            // Add the new course to the container
+            document.getElementById('course-container').appendChild(courseItem);
+          }
+          console.log('Courses fetched successfully.')
+        } else {
+          console.log("No courses to add to container.");
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching courses:', error);
+      });
+
+
   });
-  // Save Course button click event
-  document.getElementById('saveCourseButton').addEventListener('click', function() {
-    // Retrieve course information from the form
-    var courseName = document.getElementById('courseName').value;
-    var startDate = document.getElementById('courseStartDate').value;
-    var endDate = document.getElementById('courseEndDate').value;
-    var meetingTimes = document.getElementById('courseMeetingTimes').value;
-
-    // Create a new course item
-    var courseItem = document.createElement('div');
-    courseItem.classList.add('course-item');
-    courseItem.innerHTML = `<strong>${courseName}</strong><br>
-                            Start Date: ${startDate}<br>
-                            End Date: ${endDate}<br>
-                            Meeting Times: ${meetingTimes}`;
-
-    // Add the new course to the container
-    document.getElementById('course-container').appendChild(courseItem);
-
-    // Hide the modal after saving the course
-    document.getElementById('addCourseModal').style.display = 'none';
-  });
-
-  // Cancel button click event for the Add Course modal
-  document.getElementById('cancelCourseButton').addEventListener('click', function() {
-    // Hide the modal when the cancel button is clicked
-    document.getElementById('addCourseModal').style.display = 'none';
-  });
-  }

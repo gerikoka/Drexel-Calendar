@@ -205,5 +205,9 @@ function newElement() {
 }
 </script>
 
+  {% if current_user.is_authenticated %}
+    <p>Welcome, {{ current_user.username }}!</p>
+  {% endif %}
+
 </body>
 </html>
