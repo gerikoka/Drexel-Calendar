@@ -387,6 +387,51 @@ document.addEventListener('DOMContentLoaded', function() {
       // Add the new course to the container
       document.getElementById('course-container').appendChild(courseItem);
 
+      // Define a mapping of day names to their corresponding numeric values
+        var dayMap = {
+        "Sunday": 0,
+        "Monday": 1,
+        "Tuesday": 2,
+        "Wednesday": 3,
+        "Thursday": 4,
+        "Friday": 5,
+        "Saturday": 6
+    };
+
+    // Parse meeting times input
+    var meetingTimesArray = meetingTimes.split(',');
+    meetingTimesArray.forEach(function(meeting) {
+        var parts = meeting.trim().split(' ');
+        var dayName = parts[0]; // Day name
+        var time = parts[1]; // Meeting time
+
+        // Calculate the numeric value of the day based on the mapping
+        var dayOfWeek = dayMap[dayName];
+
+        // Calculate the date of the first meeting based on the start date and day of the week
+        var currentDate = new Date(startDate);
+        var offset = (dayOfWeek - currentDate.getDay() + 7) % 7;
+        currentDate.setDate(currentDate.getDate() + offset);
+
+        // Iterate from the first meeting date until the end date, adding events for each meeting
+        while (currentDate <= new Date(endDate)) {
+            // Create the event start date by combining the current date with the meeting time
+            var eventStartDate = new Date(currentDate.toDateString() + ' ' + time);
+
+            // Add the event to the calendar
+            var newEvent = {
+                title: courseName,
+                start: eventStartDate,
+                allDay: false,
+                color: '#E5B110'
+            };
+            calendar.addEvent(newEvent);
+
+            // Move to the next occurrence of the meeting (next week)
+            currentDate.setDate(currentDate.getDate() + 7);
+        }
+    });
+
       // Save the new course to the server
       fetch('/save_course', {
         method: 'POST',
