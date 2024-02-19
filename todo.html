@@ -132,7 +132,7 @@ input {
 }
 
 .draggable {
-    cursor: move;
+    cursor: grab;
 }
 
 </style>
@@ -191,9 +191,10 @@ function newElement() {
   if (inputValue === '') {
     alert("You must write something!");
   } else {
-    document.getElementById("myUL").appendChild(li);
-    makeDraggable(li)
-  }
+    li.classList.add("draggable");
+    li.setAttribute("draggable", "true");
+    document.getElementById("myUL").appendChild(li);  
+    }
   document.getElementById("myInput").value = "";
 
   var span = document.createElement("SPAN");
@@ -211,45 +212,8 @@ function newElement() {
 }
   
 // Make list items draggable
-var draggableItems = document.getElementsByClassName('draggable');
-for (var i = 0; i < draggableItems.length; i++) {
-  draggableItems[i].draggable = true;
-  draggableItems[i].addEventListener('dragstart', handleDragStart, false);
-  draggableItems[i].addEventListener('dragover', handleDragOver, false);
-  draggableItems[i].addEventListener('drop', handleDrop, false);
-}
-
-function handleDragStart(e) {
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', null);
-  draggedItem = this;
-  this.style.opacity = '0.4';
-}
-
-function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault();
-  }
-  e.dataTransfer.dropEffect = 'move';
-  return false;
-}
-
-function handleDrop(e) {
-  if (e.stopPropagation) {
-    e.stopPropagation();
-  }
-  if (draggedItem !== this) {
-    var temp = this.innerHTML;
-    this.innerHTML = draggedItem.innerHTML;
-    draggedItem.innerHTML = temp;
-  }
-  this.style.opacity = '1';
-  return false;
-}
-
-var draggedItem = null;
-
-var draggableItems = document.getElementsByClassName('draggable');
+var ul = document.getElementById("myUL");
+var draggableItems = ul.getElementsByTagName("li");
 for (var i = 0; i < draggableItems.length; i++) {
   draggableItems[i].draggable = true;
   draggableItems[i].addEventListener('dragstart', handleDragStart, false);
