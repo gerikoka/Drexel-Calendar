@@ -427,6 +427,22 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             calendar.addEvent(newEvent);
 
+            // Save the new event to the server
+            fetch('/save_event', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(newEvent),
+            })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Event saved successfully:', data);
+              })
+              .catch(error => {
+                console.error('Error saving event:', error);
+              });
+
             // Move to the next occurrence of the meeting (next week)
             currentDate.setDate(currentDate.getDate() + 7);
         }
