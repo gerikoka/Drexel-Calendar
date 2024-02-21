@@ -31,12 +31,19 @@ class Course(db.Model):
     end_date = db.Column(db.String(10))
     meeting_times = db.Column(db.String(10))
 
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    is_done = db.Column(db.Boolean, default=False)
+
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
     events = db.relationship('UserEvent', backref='user', lazy=True)
     courses = db.relationship('Course', backref='user', lazy=True)
+    tasks = db.relationship('Task', backref='user', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
 
 db.init_app(app)
@@ -186,6 +193,40 @@ def delete_course(course_id):
             return jsonify({'message': 'Course deleted successfully'})
         else:
             return jsonify({'error': 'Course not found'}), 404
+    else:
+        return jsonify({'error': 'User not authenticated'}), 401
+
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        user_tasks = Task.query.filter_by(user_id=user_id).all()
+        tasks = [{'id': task.id, 'title': task.title, 'is_done': task.is_done} for tasks in user_tasks]
+        return jsonify(tasks)
+    else:
+        return jsonify([])  # Return an empty list if the user is not authenticated
+
+@app.route('/add_task', methods=['POST'])
+def add_task():
+    if current_user.is_authenticated:
+        try:
+            user_id = current_user.id
+            task_data = request.get_json()
+
+            # Save the task to the database
+            new_task = Task(
+                title=task_data['title'],
+                is_done=task_data['is_done'] == 'true',
+                user_id=user_id
+            )
+            db.session.add(new_task)
+            db.session.commit()
+
+            # Respond with the task_id
+            return {'task_id': new_task.id}
+        except Exception as e:
+            print(f"Error saving task: {e}")
+            return jsonify({'error': 'Error saving task'}), 500
     else:
         return jsonify({'error': 'User not authenticated'}), 401
 

@@ -3,7 +3,6 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  /* Code adapted from https://www.w3schools.com/howto/howto_js_todolist.asp#:~:text=Create%20The%20To%20Do%20List%201%20Step%201%29,border-box%3B%20%7D%20...%203%20Step%203%29%20Add%20JavaScript%3A */
 body {
   margin: 0;
   min-width: 250px;
@@ -84,7 +83,6 @@ ul li.checked::before {
 .todo {
     height: 700px;
     width: 500px;
-    font: 500 1rem 'Helvetica';
 }
 
 /* Style the header */
@@ -130,11 +128,6 @@ input {
 .addBtn:hover {
   background-color: #bbb;
 }
-
-.draggable {
-    cursor: grab;
-}
-
 </style>
 </head>
 <body>
@@ -142,13 +135,13 @@ input {
 <div id="myTODO" class="todo">
   <div id="myDIV" class="header">
     <h2 style="margin:5px">To Do</h2>
-    <input type="text" id="myInput" placeholder="To do...">
+    <input type="text" id="myInput" placeholder="Title...">
     <span onclick="newElement()" class="addBtn">Add</span>
   </div>
 
-  <ul id="myUL"  ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
-    <li class="draggable">Example #1</li>
-    <li class="checked draggable">Example #2</li>
+  <ul id="myUL">
+    <li>Example #1</li>
+    <li class="checked">Example #2</li>
   </ul>
 </div>
 
@@ -191,9 +184,29 @@ function newElement() {
   if (inputValue === '') {
     alert("You must write something!");
   } else {
-    li.classList.add("draggable");
-    li.setAttribute("draggable", "true")
     document.getElementById("myUL").appendChild(li);
+
+    console.log('We are here.');
+
+    // Add the new task to the server
+    fetch('/add_task', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'title': inputValue,
+        'is_done': 'false',
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Task added successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error adding task:', error);
+      });
+
   }
   document.getElementById("myInput").value = "";
 
@@ -210,53 +223,7 @@ function newElement() {
     }
   }
 }
-// Make list items draggable
-var ul = document.getElementById("myUL");
-var draggableItems = ul.getElementsByTagName("li");
-for (var i = 0; i < draggableItems.length; i++) {
-  draggableItems[i].draggable = true;
-  draggableItems[i].addEventListener('dragstart', handleDragStart, false);
-  draggableItems[i].addEventListener('dragover', handleDragOver, false);
-  draggableItems[i].addEventListener('drop', handleDrop, false);
-}
-
-function handleDragStart(e) {
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', null);
-  draggedItem = this;
-  this.style.opacity = '0.4';
-}
-
-function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault();
-  }
-  e.dataTransfer.dropEffect = 'move';
-  return false;
-}
-
-function handleDrop(e) {
-  if (e.stopPropagation) {
-    e.stopPropagation();
-  }
-  if (draggedItem !== this) {
-    var tempText = this.innerHTML;
-    var tempChecked = this.classList.contains('checked');
-
-    this.innerHTML = draggedItem.innerHTML;
-    this.classList.toggle('checked', draggedItem.classList.contains>
-
-    draggedItem.innerHTML = tempText;
-    draggedItem.classList.toggle('checked', tempChecked);
-  }
-  this.style.opacity = '1';
-  return false;
-}
 </script>
-
-  {% if current_user.is_authenticated %}
-    <p>Welcome, {{ current_user.username }}!</p>
-  {% endif %}
 
 </body>
 </html>
