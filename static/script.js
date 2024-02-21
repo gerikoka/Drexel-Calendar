@@ -453,6 +453,22 @@ document.addEventListener('DOMContentLoaded', function() {
           console.error('Error saving course:', error);
         });
 
+        // Save the new course to the server
+        fetch('/save_event', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newCourse),
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Course saved successfully:', data);
+              })
+              .catch(error => {
+                console.error('Error saving course:', error);
+                });
+
         // Hide the modal after saving the course
         document.getElementById('addCourseModal').style.display = 'none';
       });
