@@ -201,7 +201,7 @@ def get_tasks():
     if current_user.is_authenticated:
         user_id = current_user.id
         user_tasks = Task.query.filter_by(user_id=user_id).all()
-        tasks = [{'id': task.id, 'title': task.title, 'is_done': task.is_done} for tasks in user_tasks]
+        tasks = [{'id': task.id, 'title': task.title, 'is_done': task.is_done} for task in user_tasks]
         return jsonify(tasks)
     else:
         return jsonify([])  # Return an empty list if the user is not authenticated
@@ -229,6 +229,34 @@ def add_task():
             return jsonify({'error': 'Error saving task'}), 500
     else:
         return jsonify({'error': 'User not authenticated'}), 401
+
+# Update task status
+@app.route('/update_task_status/<int:task_id>', methods=['PATCH'])
+def update_task_status(task_id):
+    data = request.get_json()
+    is_done = data.get('is_done') == 'true'  # Convert the string to a boolean
+
+    task = Task.query.get_or_404(task_id)
+    task.is_done = is_done
+    db.session.commit() 
+
+    return jsonify({'message': 'Task status updated successfully'})
+
+@app.route('/remove_task/<int:task_id>', methods=['DELETE'])
+def remove_task(task_id):
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        task_to_remove = Task.query.filter_by(id=task_id, user_id=user_id).first()
+
+        if task_to_remove:
+            db.session.delete(task_to_remove)
+            db.session.commit()
+            return jsonify({'message': 'Task removed successfully'})
+        else:
+            return jsonify({'error': 'Task not found'}), 404
+    else:
+        return jsonify({'error': 'User not authenticated'}), 401
+
 
 @app.route('/')
 def home():  
