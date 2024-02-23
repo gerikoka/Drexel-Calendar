@@ -55,7 +55,7 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'images/favicon.ico', mimetype='image/vnd.microsoft.icon')
  
 @login_manager.user_loader
 def loader_user(user_id):
