@@ -334,6 +334,21 @@
         padding: 20px 105px; /* Add some padding for better appearance */
         }
 
+      .remove-course-button {
+          padding: 2px 4px;
+          background-color: #07294D; 
+          color: #fff;
+          border: none;
+          border-radius: 3px;
+          font-size: 10px;
+          cursor: pointer;
+          transition: background-color 0.3s ease-in-out;
+        }
+
+        .remove-course-button:hover {
+          background-color: #041a32; 
+        }
+
 
     </style>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
@@ -684,10 +699,24 @@
         courseItem.innerHTML = `<strong>${courseName}</strong><br>
                                 Start Date: ${startDate}<br>
                                 End Date: ${endDate}<br>
-                                Meeting Times: ${meetingTimes}`;
+                                Meeting Times: ${meetingTimes}
+                                <button class="remove-course-button">Remove<button>`;
 
         // Add the new course to the container
         document.getElementById('course-container').appendChild(courseItem);
+
+        // Attach event listener to the delete button of this course
+        courseItem.querySelector('.remove-course-button').addEventListener('click', function() {
+          // Remove the course item from the container
+          courseItem.remove(); // Remove the course item from the container
+
+          // Remove associated events from the calendar
+        calendar.getEvents().forEach(function(event) {
+            if (event.title === courseName) {
+                event.remove();
+            }
+        });
+      });
 
         // Define a mapping of day names to their corresponding numeric values
         var dayMap = {
