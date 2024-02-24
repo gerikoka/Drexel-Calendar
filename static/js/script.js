@@ -397,7 +397,37 @@ document.addEventListener('DOMContentLoaded', function() {
         calendar.getEvents().forEach(function(event) {
             if (event.title === courseName) {
                 event.remove();
+
+                // Remove the event from the server
+                fetch(`/delete_event/${event.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Event deleted successfully:', data);
+                })
+                .catch(error => {
+                    console.error('Error deleting event:', error);
+                });
             }
+        });
+
+        // Remove the course from the server
+        fetch(`/delete_course/${courseName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Course deleted successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error deleting course:', error);
         });
       });
 
@@ -503,14 +533,43 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create a new course item
             var courseItem = document.createElement('div');
             courseItem.classList.add('course-item');
-            courseItem.innerHTML = `<strong>${courseName}</strong><br>
-                                    Start Date: ${startDate}<br>
-                                    End Date: ${endDate}<br>
-                                    Meeting Times: ${meetingTimes}`;
+            courseItem.innerHTML = `<strong>${course.name}</strong><br>
+                                    Start Date: ${course.start_date}<br>
+                                    End Date: ${course.end_date}<br>
+                                    Meeting Times: ${course.meeting_times}
+                                    <button class="remove-course-button">Remove</button>`;
 
             // Add the new course to the container
             document.getElementById('course-container').appendChild(courseItem);
-          }
+
+            // Attach event listener to the delete button of this course
+        courseItem.querySelector('.remove-course-button').addEventListener('click', function() {
+          // Remove the course item from the container
+          courseItem.remove(); // Remove the course item from the container
+
+          // Remove associated events from the calendar
+          calendar.getEvents().forEach(function(event) {
+              if (event.title === course.name) {
+                  event.remove();
+              }
+          });
+
+          // Send request to server to remove the course
+          fetch(`/remove_course/${course.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Course removed successfully:', data);
+            })
+            .catch(error => {
+              console.error('Error removing course:', error);
+            });
+        });
+      }
           console.log('Courses fetched successfully.')
         } else {
           console.log("No courses to add to container.");
