@@ -335,3 +335,18 @@ footer .p {
     color: white; /* Set the text color to white */
     padding: 20px 105px; /* Add some padding for better appearance */
     }
+
+    .remove-course-button {
+      padding: 2px 4px;
+      background-color: #07294D; 
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .remove-course-button:hover {
+      background-color: #041a32; 
+    }
