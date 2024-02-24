@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Remove the course from the server
-        fetch(`/delete_course/${course.id}`, {
+        fetch(`/delete_course/${courseName}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
