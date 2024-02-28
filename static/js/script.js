@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to remove an event from the server
   function deleteEvent(eventId) {
-    fetch(`/delete_event/${eventId}`, {
+    fetch('/delete_event/' + eventId, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -309,32 +309,33 @@ document.addEventListener('DOMContentLoaded', function() {
     var eventDate = document.getElementById('eventDate').value;
     var eventTime = document.getElementById('eventTime').value;
 
-    // Add the new event to the calendar
-    var newEvent = {
-      title: eventName,
-      start: new Date(eventDate + 'T' + eventTime), // Convert to Date object
-      allDay: false,
-      color: '#E5B110'
-    };
-
-    calendar.addEvent(newEvent);
-
     // Save the new event to the server
     fetch('/save_event', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newEvent),
+      body: JSON.stringify({
+        title: eventName,
+        start: new Date(eventDate + 'T' + eventTime), // Convert to Date object
+        allDay: false,
+        color: '#E5B110'
+      }),
     })
       .then(response => response.json())
       .then(data => {
         console.log('Event saved successfully:', data);
+        calendar.addEvent({
+          title: eventName,
+          start: new Date(eventDate + 'T' + eventTime), // Convert to Date object
+          allDay: false,
+          color: '#E5B110',
+          id: data.event_id
+        });
       })
       .catch(error => {
         console.error('Error saving event:', error);
       });
-
 
     // Hide the modal after saving the event
     document.getElementById('addEventModal').style.display = 'none';
@@ -390,24 +391,15 @@ document.addEventListener('DOMContentLoaded', function() {
                               Meeting Times: ${meetingTimes}
                               <button class="remove-course-button">Remove</button>`;
 
-    // Add the new course to the container
-    document.getElementById('course-container').appendChild(courseItem);
-
-    // Attach event listener to the delete button of this course
-    courseItem.querySelector('.remove-course-button').addEventListener('click', function() {
-      var courseData = this.parentElement.dataset;
-      deleteCourse(courseData);
-    });
-
     // Define a mapping of day names to their corresponding numeric values
-      var dayMap = {
-      "Sunday": 0,
-      "Monday": 1,
-      "Tuesday": 2,
-      "Wednesday": 3,
-      "Thursday": 4,
-      "Friday": 5,
-      "Saturday": 6
+    var dayMap = {
+    "Sunday": 0,
+    "Monday": 1,
+    "Tuesday": 2,
+    "Wednesday": 3,
+    "Thursday": 4,
+    "Friday": 5,
+    "Saturday": 6
     };
 
     // Parse meeting times input
@@ -437,7 +429,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 allDay: false,
                 color: '#E5B110'
             };
-            calendar.addEvent(newEvent);
 
             // Save the new event to the server
             fetch('/save_event', {
@@ -450,10 +441,18 @@ document.addEventListener('DOMContentLoaded', function() {
               .then(response => response.json())
               .then(data => {
                 console.log('Event saved successfully:', data);
+                calendar.addEvent({
+                  title: courseName,
+                  start: eventStartDate,
+                  allDay: false,
+                  color: '#E5B110',
+                  id: data.event_id
+                });
               })
               .catch(error => {
                 console.error('Error saving event:', error);
               });
+          
 
             // Move to the next occurrence of the meeting (next week)
             currentDate.setDate(currentDate.getDate() + 7);
@@ -476,10 +475,22 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         console.log('Course saved successfully:', data);
+        courseItem.dataset.id = data.course_id;
       })
       .catch(error => {
         console.error('Error saving course:', error);
       });
+
+    courseItem.dataset.name = courseName; // Set the course name
+
+    // Add the new course to the container
+    document.getElementById('course-container').appendChild(courseItem);
+
+    // Attach event listener to the delete button of this course
+    courseItem.querySelector('.remove-course-button').addEventListener('click', function() {
+      var courseData = this.parentElement.dataset;
+      deleteCourse(courseData);
+    });
 
     // Hide the modal after saving the course
     document.getElementById('addCourseModal').style.display = 'none';
