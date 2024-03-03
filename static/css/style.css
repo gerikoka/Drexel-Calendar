@@ -188,23 +188,23 @@ nav .right-button button:hover {
 
 
 footer {
-  padding: 15px;
-  width: 100%;
-  box-sizing: border-box;
+  background-color: #07294D; /* Blue background color */
+  padding: 10px;
+  color: #ffffff;
   position: fixed;
   bottom: 0;
-  z-index: 1000;
+  width: 100%;
   display: flex;
-  justify-content: flex-start;
-  background-color: #07294D;
-  color: #FFC600;
+  box-sizing: border-box; /* Corrected typo */
+  z-index: 1000;
   text-align: right;
-  margin-top: 20px; /* Add some space between the todo list and the footer */
 }
 
-footer .p {
-  color: #FFC600;
-  margin-right: auto;
+footer a {
+  color: #CC9E00; /* Yellow link color */
+  margin-right: 20px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 #includeTodo {
