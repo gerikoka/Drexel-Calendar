@@ -568,5 +568,5 @@ document.addEventListener('DOMContentLoaded', function() {
               deleteEvent(event.id);
           }
       });
-    }
-  });
+  }
+});
