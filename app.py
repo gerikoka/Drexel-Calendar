@@ -4,6 +4,7 @@ from scrape_events import scrape_events
 from admin import admin_bp
 from flask import Flask, request, redirect, render_template, send_from_directory, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKeyConstraint
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user
 from flask_migrate import Migrate
 
@@ -12,7 +13,7 @@ app = Flask(__name__, static_folder='static')
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "ENTER YOUR SECRET KEY"
 db = SQLAlchemy()
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, render_as_batch=True)
  
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -36,6 +37,8 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     is_done = db.Column(db.Boolean, default=False)
+    course_id = db.Column(db.Integer)
+    fk_organization = ForeignKeyConstraint(['course_id'], ['course.id'], name='fk_organization')
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -201,7 +204,7 @@ def get_tasks():
     if current_user.is_authenticated:
         user_id = current_user.id
         user_tasks = Task.query.filter_by(user_id=user_id).all()
-        tasks = [{'id': task.id, 'title': task.title, 'is_done': task.is_done} for task in user_tasks]
+        tasks = [{'id': task.id, 'title': task.title, 'is_done': task.is_done, 'course_id': task.course_id} for task in user_tasks]
         return jsonify(tasks)
     else:
         return jsonify([])  # Return an empty list if the user is not authenticated
@@ -262,7 +265,7 @@ def remove_task(task_id):
 def home():  
     if current_user.is_authenticated:
         username = current_user.username
-        user_events = current_user.events
+        courses = current_user.courses
         return render_template('index.html', username=username)
     else: 
         return render_template('index.html')

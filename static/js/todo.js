@@ -32,6 +32,9 @@ function newElement() {
     li.setAttribute("draggable", "true");
     document.getElementById("myUL").appendChild(li); 
    
+    // Get the selected course from the dropdown
+    var selectedCourseId = document.getElementById("courseSelect").value;
+
     // Add the new task to the server
     fetch('/add_task', {
       method: 'POST',
@@ -41,6 +44,7 @@ function newElement() {
       body: JSON.stringify({
         'title': inputValue,
         'is_done': 'false',
+        'course_id': selectedCourseId,
       }),
     })
       .then(response => response.json())
