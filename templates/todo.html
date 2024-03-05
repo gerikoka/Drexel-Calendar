@@ -10,16 +10,15 @@
     <div id="myDIV" class="header">
       <h2 style="margin:5px">To Do</h2>
       <input type="text" id="myInput" placeholder="To do...">
+      <div class="course-dropdown">
+        <select id="courseSelect">
+          <option value="" disabled selected>(Optional) Select a course</option>
+          {% for course in current_user.courses %}
+            <option value="{{ course.id }}">{{ course.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
       <span onclick="newElement()" class="addBtn">Add</span>
-    </div>
-    <div class="course-dropdown">
-      <label for="courseSelect">Select a Course:</label>
-      <select id="courseSelect">
-        <option value="" disabled selected>Select a course</option>
-        {% for course in current_user.courses %}
-          <option value="{{ course.id }}">{{ course.name }}</option>
-        {% endfor %}
-      </select>
     </div>
 
     <ul id="myUL" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
