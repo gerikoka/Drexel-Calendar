@@ -4,6 +4,7 @@ from scrape_events import scrape_events
 from admin import admin_bp
 from flask import Flask, request, redirect, render_template, send_from_directory, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKeyConstraint
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user
 from flask_migrate import Migrate
 
@@ -36,7 +37,8 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     is_done = db.Column(db.Boolean, default=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    course_id = db.Column(db.Integer)
+    fk_organization = ForeignKeyConstraint(['course_id'], ['course.id'], name='fk_organization')
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
