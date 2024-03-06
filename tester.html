@@ -1,9 +1,75 @@
 <!DOCTYPE html>
 <html lang='en'> 
     <head>
-    <meta charset='utf-8' />
+    <meta charset='UTF-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <title>Drexel Planner Lifestyle</title>
-    <nav>
-      <a href="./index.html">Home</a>
-      <a href="./tester.html">tester</a>
-    </nav>
+    </head>
+    <body>  
+      <div id="includeNav"></div>
+
+      <div id="dragon_pic">
+	      <img src="../static/images/cute_dragon.jpg">
+        <h1>Fun quizzes, minigames, and more coming soon!</h1>
+      </div>
+
+    </body>
+
+    <footer>
+        <a href="https://drexel.edu/">Go to Drexel's homepage</a>
+        <a href="https://drexel.edu/counselingandhealth/counseling-center/overview/">Access mental health resources</a>
+    </footer>
+
+  <style>
+  
+   body {
+     margin: auto;
+   }
+
+    #dragon_pic {
+      display: felx;
+      justify-content: center;
+      padding: 30px;
+      margin-left: 575px;
+      margin-right: auto;
+      margin-top: 250px;
+    }
+
+    #dragon_pic h1 {
+        padding: 10px;
+        margin: auto;
+        color: #CC9E00;
+    }
+
+    footer {
+      background-color: #07294D; /* Blue background color */
+      padding: 10px;
+      color: #ffffff;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      box-sizing: border-box; /* Corrected typo */
+      z-index: 1000;
+      text-align: right;
+    }
+
+    footer a {
+      color: #CC9E00; /* Yellow link color */
+      margin-right: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+  </style>
+  <script>
+    $(function() {
+      $("#includeNav").load("{{ url_for('navbar') }}");
+    });
+  </script>
+</html>
+
+
