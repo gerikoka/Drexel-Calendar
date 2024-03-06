@@ -19,21 +19,28 @@ for (i = 0; i < close.length; i++) {
   }
 }
 
-// Create a new list item when clicking on the "Add" button
 function newElement() {
   var li = document.createElement("li");
   var inputValue = document.getElementById("myInput").value;
-  var t = document.createTextNode(inputValue);
+  var selectedCourse = document.getElementById("courseSelect");
+  var selectedCourseText = selectedCourse.options[selectedCourse.selectedIndex].text;
+
+  if (selectedCourseText == '(Optional) Select a course') {
+    var t = document.createTextNode(inputValue);
+  } else {
+    var t = document.createTextNode(inputValue + ' (' + selectedCourseText + ')');
+  }
   li.appendChild(t);
+
   if (inputValue === '') {
     alert("You must write something!");
   } else {
     li.classList.add("draggable");
     li.setAttribute("draggable", "true");
-    document.getElementById("myUL").appendChild(li); 
-   
+    document.getElementById("myUL").appendChild(li);
+
     // Get the selected course from the dropdown
-    var selectedCourseId = document.getElementById("courseSelect").value;
+    var selectedCourseId = selectedCourse.value;
 
     // Add the new task to the server
     fetch('/add_task', {
@@ -52,12 +59,14 @@ function newElement() {
         console.log('Task added successfully:', data);
         li.dataset.taskId = data.task_id;
         li.dataset.taskDone = 'false';
-    })
+      })
       .catch(error => {
         console.error('Error adding task:', error);
       });
-    }
+  }
+
   document.getElementById("myInput").value = "";
+  selectedCourse.value = "";
 
   // Inside the newElement function
   var closeBtn = document.createElement("SPAN");
@@ -83,8 +92,13 @@ fetch('/tasks')
       for (var task of data) {
         // Create a new task item
         var taskItem = document.createElement("li");
-        var taskTitle = document.createTextNode(task.title);
-        taskItem.appendChild(taskTitle);
+        if (task.course_name){
+          var t = document.createTextNode(task.title + ' (' + task.course_name + ')');
+        }
+        else {
+          var t = document.createTextNode(task.title);
+        }
+        taskItem.appendChild(t);
         taskItem.dataset.taskId = task.id; // Set the unique ID
         taskItem.dataset.taskDone = task.is_done; // Set the checked state
         document.getElementById("myUL").appendChild(taskItem); 
@@ -115,7 +129,7 @@ fetch('/tasks')
     }
   })
   .catch(error => {
-    console.error('Error fetching courses:', error);
+    console.error('Error fetching tasks:', error);
 });
 
 // Update the task status when clicking on a task

@@ -199,12 +199,29 @@ def delete_course(course_id):
     else:
         return jsonify({'error': 'User not authenticated'}), 401
 
+def get_course_name(course_id):
+    if course_id is not None:
+        course = Course.query.get(course_id)
+        return course.name if course else None
+    else:
+        return None
+
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
     if current_user.is_authenticated:
         user_id = current_user.id
         user_tasks = Task.query.filter_by(user_id=user_id).all()
-        tasks = [{'id': task.id, 'title': task.title, 'is_done': task.is_done, 'course_id': task.course_id} for task in user_tasks]
+        
+        tasks = [
+            {
+                'id': task.id,
+                'title': task.title,
+                'is_done': task.is_done,
+                'course_name': get_course_name(task.course_id)  # Use the helper function here
+            }
+            for task in user_tasks
+        ]
+        
         return jsonify(tasks)
     else:
         return jsonify([])  # Return an empty list if the user is not authenticated
@@ -220,7 +237,8 @@ def add_task():
             new_task = Task(
                 title=task_data['title'],
                 is_done=task_data['is_done'] == 'true',
-                user_id=user_id
+                user_id=user_id,
+                course_id=task_data['course_id']
             )
             db.session.add(new_task)
             db.session.commit()
