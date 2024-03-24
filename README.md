@@ -27,9 +27,9 @@ To use the planner, follow these steps:
 
 ## Contributors
 
-- [Contributor 1](https://github.com/rachellepena)
-- [Contributor 2](https://github.com/marleyek)
-- [Contributor 3](https://github.com/ret47)
+- [Rachelle Pena](https://github.com/rachellepena)
+- [Marley Kronemeyer](https://github.com/marleyek)
+- [Rachel Typrin](https://github.com/ret47)
 
 ## How to Run app.py
 Run the following commands to create a virtual environment on the **Drexel-Calendar** directory:
