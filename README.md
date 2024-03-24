@@ -1,4 +1,4 @@
-# Group11
+# Drexel Calendar
 
 ## Documentation
 fullcalendar: https://fullcalendar.io/
