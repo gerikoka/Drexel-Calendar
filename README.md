@@ -16,7 +16,7 @@ fullcalendar: https://fullcalendar.io/
 
 To use the planner, follow these steps:
 
-1. Clone the repository to your local machine with the command 
+1. Clone the repository to your local machine with the command **git clone https://github.com/gerikoka/Drexel-Calendar.git**
 2. Move to the project's directory with the command **cd Drexel-Calendar**
 3. After that, follow the instructions in the **How to Run app.py** section
 4. The planner will load, displaying the calendar with national holidays, Drexel-specific events, and user-created events.
@@ -24,6 +24,12 @@ To use the planner, follow these steps:
 6. You can also add user-created events by clicking the "Add Event" button and filling out the form.
 7. To remove a course or event, click the "Remove" button next to the respective item.
 8. You can navigate between different views of the calendar using the navigation buttons at the top.
+
+## Contributors
+
+- [Contributor 1](https://github.com/contributor1)
+- [Contributor 2](https://github.com/contributor2)
+- [Contributor 3](https://github.com/contributor3)
 
 ## How to Run app.py
 Run the following commands to create a virtual environment on the **Drexel-Calendar** directory:
