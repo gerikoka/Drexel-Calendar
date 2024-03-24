@@ -5,7 +5,7 @@ fullcalendar: https://fullcalendar.io/
 
 
 ## How to Run app.py
-Run the folling commands to create a virtual environment:
+Run the following commands to create a virtual environment on the **Drexel-Calendar** directory:
 ```bash
 pip install virtualenv
 python3 -m venv env
