@@ -45,7 +45,7 @@ Then, install the necessary dependencies by running the following:
 ```bash
 pip install -r requirements.txt
 ```
-Lastly, run the following command to start the development server:
+Lastly, run the following command to start the development server and copy and paste the link given to you on your browser:
 ```bash
 flask run
 ```
