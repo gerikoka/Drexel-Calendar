@@ -1,9 +1,9 @@
 # Drexel Calendar
 
+This repository contains code for a Drexel-specific planner. The planner is designed to help manage coursework and exams with personalized student-life suggestions. The planner includes features to manage national holidays, Drexel-specific events, user-created events, and courses.
+
 ## Documentation
 fullcalendar: https://fullcalendar.io/
-
-This repository contains code for a Drexel-specific planner. The planner is designed to help manage coursework and exams with personalized student-life suggestions. The planner includes features to manage national holidays, Drexel-specific events, user-created events, and courses.
 
 ## Features
 
@@ -16,13 +16,14 @@ This repository contains code for a Drexel-specific planner. The planner is desi
 
 To use the planner, follow these steps:
 
-1. Clone the repository to your local machine.
+1. Clone the repository to your local machine with the command 
 2. Move to the project's directory with the command **cd Drexel-Calendar**
-3. The planner will load, displaying the calendar with national holidays, Drexel-specific events, and user-created events.
-4. You can add courses by clicking the "Add Course" button and filling out the form. The course events will be automatically added to the calendar.
-5. You can also add user-created events by clicking the "Add Event" button and filling out the form.
-6. To remove a course or event, click the "Remove" button next to the respective item.
-7. You can navigate between different views of the calendar using the navigation buttons at the top.
+3. After that, follow the instructions in the **How to Run app.py** section
+4. The planner will load, displaying the calendar with national holidays, Drexel-specific events, and user-created events.
+5. You can add courses by clicking the "Add Course" button and filling out the form. The course events will be automatically added to the calendar.
+6. You can also add user-created events by clicking the "Add Event" button and filling out the form.
+7. To remove a course or event, click the "Remove" button next to the respective item.
+8. You can navigate between different views of the calendar using the navigation buttons at the top.
 
 ## How to Run app.py
 Run the following commands to create a virtual environment on the **Drexel-Calendar** directory:
